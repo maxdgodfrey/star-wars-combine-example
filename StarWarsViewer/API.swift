@@ -24,7 +24,6 @@ extension StarWarsAPI {
 }
 
 extension JSONDecoder {
-    
     static let `default` = JSONDecoder()
 }
 
