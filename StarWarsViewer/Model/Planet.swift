@@ -34,3 +34,27 @@ struct Planet: Decodable {
         residents.compactMap(URL.init(string:))
     }
 }
+
+extension Planet {
+    
+    static let mocks: [Planet] = [
+        .init(
+            climate: "foobar",
+            gravity: "1 standard",
+            name: "MockPlanet",
+            population: "200000",
+            residents: [
+                "https://www.google.com"
+            ]
+        ),
+        .init(
+            climate: "bazbaz",
+            gravity: "2 standard",
+            name: "MockPlanet 2",
+            population: "20000",
+            residents: [
+                "https://www.google.com"
+            ]
+        )
+    ]
+}

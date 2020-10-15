@@ -21,6 +21,21 @@ extension StarWarsAPI {
             getResidentsOnPlanet: client.getResidents(on:)
         )
     }()
+    
+    static let mock: StarWarsAPI = {
+        StarWarsAPI(
+            getPlanets: {
+                Just(Planet.mocks)
+                    .mapError { $0 }
+                    .eraseToAnyPublisher()
+            },
+            getResidentsOnPlanet: { planet in
+                Just(Resident.fakes)
+                    .mapError { $0 }
+                    .eraseToAnyPublisher()
+            }
+        )
+    }()
 }
 
 extension JSONDecoder {
@@ -42,35 +57,10 @@ final class APIClient {
     }
     
     func getPlanets() -> AnyPublisher<[Planet], Error> {
-        let planetList: AnyPublisher<APIList<Planet>, Error> = get(path: "planets")
-        return planetList.map(\.results).eraseToAnyPublisher()
+        fatalError("Not implemented")
     }
     
     func getResidents(on planet: Planet) -> AnyPublisher<[Resident], Error> {
-        let residents: [AnyPublisher<Resident, Error>] = planet.residentEndpoints.map(get(url:))
-        // Zip sucks in Combine :(
-        guard let first = residents.first else {
-            return Just([Resident]())
-            .mapError { $0 }
-                .eraseToAnyPublisher()
-        }
-        return residents.dropFirst()
-            .reduce(first.map { [$0] }.eraseToAnyPublisher()) { current, next in
-                current.zip(next) { a, b -> [Resident] in
-                    a + [b]
-                }
-                .eraseToAnyPublisher()
-        }
-    }
-    
-    private func get<T: Decodable>(path: String) -> AnyPublisher<T, Error> {
-        get(url: baseURL.appendingPathComponent(path))
-    }
-    
-    private func get<T: Decodable>(url: URL) -> AnyPublisher<T, Error> {
-        session.dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: T.self, decoder: decoder)
-            .eraseToAnyPublisher()
+        fatalError("Not implemented")
     }
 }
