@@ -7,52 +7,6 @@
 import Foundation
 import Combine
 
-extension URL {
-    init(staticString string: StaticString) {
-        guard let url = URL(string: "\(string)") else {
-            preconditionFailure("Invalid static URL string: \(string)")
-        }
-        self = url
-    }
-}
-
-struct APIList<T: Decodable>: Decodable {
-    let count: Int
-    let results: [T]
-}
-
-/**
- "climate": "Arid",
-   "diameter": "10465",
-   "gravity": "1 standard",
-   "name": "Tatooine",
-   "orbital_period": "304",
-   "population": "200000",
-   "residents": [
-       "https://swapi.dev/api/people/1/",
-       "https://swapi.dev/api/people/2/",
-       ...
-   ],
-   "rotation_period": "23",
-   "surface_water": "1",
-   "terrain": "Dessert",
-   "url": "https://swapi.dev/api/planets/1/"
- */
-struct Planet: Decodable {
-    let climate: String
-    let gravity: String
-    let name: String
-    let population: String
-    let residents: [String]
-    var residentEndpoints: [URL] {
-        residents.compactMap(URL.init(string:))
-    }
-}
-
-struct Resident: Decodable {
-    let name: String
-}
-
 struct StarWarsAPI {
     var getPlanets: () -> AnyPublisher<[Planet], Error>
     var getResidentsOnPlanet: (Planet) -> AnyPublisher<[Resident], Error>
@@ -61,7 +15,7 @@ struct StarWarsAPI {
 extension StarWarsAPI {
     
     static let live: StarWarsAPI = {
-        let client = API()
+        let client = APIClient()
         return StarWarsAPI(
             getPlanets: client.getPlanets,
             getResidentsOnPlanet: client.getResidents(on:)
@@ -74,7 +28,7 @@ extension JSONDecoder {
     static let `default` = JSONDecoder()
 }
 
-final class API {
+final class APIClient {
     
     let baseURL = URL(staticString: "https://swapi.dev/api/")
     let session: URLSession
@@ -98,12 +52,15 @@ final class API {
         // Zip sucks in Combine :(
         guard let first = residents.first else {
             return Just([Resident]())
-            .mapError { $0 }.eraseToAnyPublisher()
+            .mapError { $0 }
+                .eraseToAnyPublisher()
         }
-        return residents.dropFirst().reduce(first.map { [$0] }.eraseToAnyPublisher()) { current, next in
-            current.zip(next) { a, b -> [Resident] in
-                a + [b]
-            }.eraseToAnyPublisher()
+        return residents.dropFirst()
+            .reduce(first.map { [$0] }.eraseToAnyPublisher()) { current, next in
+                current.zip(next) { a, b -> [Resident] in
+                    a + [b]
+                }
+                .eraseToAnyPublisher()
         }
     }
     
