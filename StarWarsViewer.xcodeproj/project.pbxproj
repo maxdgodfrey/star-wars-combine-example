@@ -152,6 +152,8 @@
 			dependencies = (
 			);
 			name = StarWarsViewer;
+			packageProductDependencies = (
+			);
 			productName = StarWarsViewer;
 			productReference = 7B699023253812370062FC5E /* StarWarsViewer.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +225,8 @@
 				Base,
 			);
 			mainGroup = 7B69901A253812370062FC5E;
+			packageReferences = (
+			);
 			productRefGroup = 7B699024253812370062FC5E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

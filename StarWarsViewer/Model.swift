@@ -56,6 +56,7 @@ struct Resident: Decodable {
 struct StarWarsAPI {
     var getPlanets: () -> AnyPublisher<[Planet], Error>
     var getResidentsOnPlanet: (Planet) -> AnyPublisher<[Resident], Error>
+    var getResidentForURL: (Planet) -> AnyPublisher<Result<Resident, APIError>, Never>
 }
 
 extension StarWarsAPI {
@@ -64,7 +65,8 @@ extension StarWarsAPI {
         let client = API()
         return StarWarsAPI(
             getPlanets: client.getPlanets,
-            getResidentsOnPlanet: client.getResidents(on:)
+            getResidentsOnPlanet: client.getResidents(on:),
+            getResidentForURL: client.getResidentsA(on:)
         )
     }()
 }
@@ -73,6 +75,19 @@ extension JSONDecoder {
     
     static let `default` = JSONDecoder()
 }
+
+
+public extension Collection where Element: Publisher {
+    /// Merge a collection of publishers with the same output and failure types into a single publisher.
+    /// If any of the publishers in the collection fails, the returned publisher will also fail.
+    /// The returned publisher will not finish until all of the merged publishers finish.
+    ///
+    /// - Returns: A type-erased publisher that emits all events from the publishers in the collection.
+    func merge() -> AnyPublisher<Element.Output, Element.Failure> {
+        Publishers.MergeMany(self).eraseToAnyPublisher()
+    }
+}
+
 
 final class API {
     
@@ -93,25 +108,24 @@ final class API {
         return planetList.map(\.results).eraseToAnyPublisher()
     }
     
+    func getResidentsA(on planet: Planet) -> AnyPublisher<Result<Resident, APIError>, Never> {
+        let residents: [AnyPublisher<Resident, Error>] = planet.residentEndpoints.map(get(url:))
+        let b = residents.map {
+            $0.map(Result<Resident, APIError>.success).replaceError(with: .failure(.failed)).eraseToAnyPublisher()
+        }
+        return b.merge().print().eraseToAnyPublisher()
+    }
+    
     func getResidents(on planet: Planet) -> AnyPublisher<[Resident], Error> {
         let residents: [AnyPublisher<Resident, Error>] = planet.residentEndpoints.map(get(url:))
-        // Zip sucks in Combine :(
-        guard let first = residents.first else {
-            return Just([Resident]())
-            .mapError { $0 }.eraseToAnyPublisher()
-        }
-        return residents.dropFirst().reduce(first.map { [$0] }.eraseToAnyPublisher()) { current, next in
-            current.zip(next) { a, b -> [Resident] in
-                a + [b]
-            }.eraseToAnyPublisher()
-        }
+        return residents.merge().collect().eraseToAnyPublisher()
     }
     
     private func get<T: Decodable>(path: String) -> AnyPublisher<T, Error> {
         get(url: baseURL.appendingPathComponent(path))
     }
     
-    private func get<T: Decodable>(url: URL) -> AnyPublisher<T, Error> {
+    func get<T: Decodable>(url: URL) -> AnyPublisher<T, Error> {
         session.dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: T.self, decoder: decoder)
