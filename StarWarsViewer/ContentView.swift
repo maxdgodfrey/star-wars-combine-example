@@ -9,16 +9,16 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-        
-    let planets: [Planet] = Planet.mocks
+  
+    @ObservedObject var dataSource = DataSource()
     
     var body: some View {
         NavigationView {
-            List(planets, id: \.name) { planet in
+            List(self.dataSource.planets, id: \.name) { planet in
                 NavigationLink(planet.name, destination: ResidentListView(planet: planet))
             }
             .navigationTitle("Planets")
-        }
+        }.onAppear(perform: self.dataSource.fetchPlanets)
     }
 }
 

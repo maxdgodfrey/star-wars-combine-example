@@ -57,7 +57,12 @@ final class APIClient {
     }
     
     func getPlanets() -> AnyPublisher<[Planet], Error> {
-        fatalError("Not implemented")
+        let planetUrl = baseURL.appendingPathComponent("planets")
+        return session.dataTaskPublisher(for: planetUrl).map { data in
+            return data.data
+        }.decode(type: APIList<Planet>.self, decoder: decoder)
+        .map { $0.results }
+        .eraseToAnyPublisher()
     }
     
     func getResidents(on planet: Planet) -> AnyPublisher<[Resident], Error> {

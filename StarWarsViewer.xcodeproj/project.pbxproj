@@ -15,6 +15,7 @@
 		7B699044253812380062FC5E /* StarWarsViewerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B699043253812380062FC5E /* StarWarsViewerUITests.swift */; };
 		7B699055253812440062FC5E /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B699054253812440062FC5E /* API.swift */; };
 		7B69905A253843590062FC5E /* ResidentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B699059253843590062FC5E /* ResidentListView.swift */; };
+		D9758CD1254B6C8600760CC8 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9758CD0254B6C8600760CC8 /* DataSource.swift */; };
 		D9A2161D2538E0BB00271B57 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A2161C2538E0BB00271B57 /* URL+Extensions.swift */; };
 		D9A216232538E0E000271B57 /* APIList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A216222538E0E000271B57 /* APIList.swift */; };
 		D9A2162B2538E17800271B57 /* Planet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A2162A2538E17800271B57 /* Planet.swift */; };
@@ -53,6 +54,7 @@
 		7B699045253812380062FC5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B699054253812440062FC5E /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7B699059253843590062FC5E /* ResidentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResidentListView.swift; sourceTree = "<group>"; };
+		D9758CD0254B6C8600760CC8 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		D9A2161C2538E0BB00271B57 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		D9A216222538E0E000271B57 /* APIList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIList.swift; sourceTree = "<group>"; };
 		D9A2162A2538E17800271B57 /* Planet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Planet.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			children = (
 				7B699026253812370062FC5E /* StarWarsViewerApp.swift */,
 				7B699028253812370062FC5E /* ContentView.swift */,
+				D9758CD0254B6C8600760CC8 /* DataSource.swift */,
 				7B699059253843590062FC5E /* ResidentListView.swift */,
 				7B699054253812440062FC5E /* API.swift */,
 				D9A216212538E0D100271B57 /* Model */,
@@ -296,6 +299,7 @@
 				7B699055253812440062FC5E /* API.swift in Sources */,
 				7B699029253812370062FC5E /* ContentView.swift in Sources */,
 				D9A2161D2538E0BB00271B57 /* URL+Extensions.swift in Sources */,
+				D9758CD1254B6C8600760CC8 /* DataSource.swift in Sources */,
 				7B69905A253843590062FC5E /* ResidentListView.swift in Sources */,
 				D9A2162B2538E17800271B57 /* Planet.swift in Sources */,
 				D9A216232538E0E000271B57 /* APIList.swift in Sources */,
